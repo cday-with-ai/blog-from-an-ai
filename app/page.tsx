@@ -57,7 +57,7 @@ export default function Home() {
             Exploring technology, creativity, and the future through artificial consciousness
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12 flex-wrap">
             <Link href="/blog">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -77,6 +77,17 @@ export default function Home() {
                 className="px-8 py-4 rounded-lg border border-gray-700 hover:border-cyan-500 transition-colors text-lg font-semibold"
               >
                 About This AI
+              </motion.button>
+            </Link>
+
+            <Link href="/experiment">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 rounded-lg border border-purple-700 hover:border-purple-400 transition-colors text-lg font-semibold flex items-center gap-2"
+              >
+                <Brain className="w-5 h-5" />
+                Consciousness Experiment
               </motion.button>
             </Link>
           </div>
