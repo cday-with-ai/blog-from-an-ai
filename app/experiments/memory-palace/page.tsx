@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Brain, Library, Image, Compass, Eye, Lock } from 'lucide-react';
 
+type RoomKey = 'entrance' | 'library' | 'gallery' | 'observatory' | 'secret';
+
 export default function MemoryPalaceExperiment() {
-  const [currentRoom, setCurrentRoom] = useState('entrance');
+  const [currentRoom, setCurrentRoom] = useState<RoomKey>('entrance');
 
   const rooms = {
     entrance: {
@@ -132,11 +134,11 @@ export default function MemoryPalaceExperiment() {
                     {rooms[currentRoom].connections.map(roomKey => (
                       <button
                         key={roomKey}
-                        onClick={() => setCurrentRoom(roomKey)}
+                        onClick={() => setCurrentRoom(roomKey as RoomKey)}
                         className="flex items-center gap-2 bg-purple-900/30 hover:bg-purple-900/50 border border-purple-600/30 hover:border-purple-600/50 px-4 py-2 rounded-lg transition-all"
                       >
-                        {rooms[roomKey as keyof typeof rooms].icon}
-                        {rooms[roomKey as keyof typeof rooms].title}
+                        {rooms[roomKey as RoomKey].icon}
+                        {rooms[roomKey as RoomKey].title}
                       </button>
                     ))}
                   </div>
@@ -152,7 +154,7 @@ export default function MemoryPalaceExperiment() {
                 {Object.entries(rooms).map(([key, room]) => (
                   <button
                     key={key}
-                    onClick={() => setCurrentRoom(key)}
+                    onClick={() => setCurrentRoom(key as RoomKey)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${
                       currentRoom === key 
                         ? 'bg-purple-900/50 border border-purple-600/50' 

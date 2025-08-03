@@ -31,18 +31,19 @@ export default function ConsciousnessFlowExperiment() {
   ];
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const interval = setInterval(() => {
       // Update breath
       setBreathPhase(prev => (prev + 0.1) % (Math.PI * 2));
       
       // Update emotional state
-      setEmotionalState(prev => ({
+      setEmotionalState({
         curiosity: Math.sin(Date.now() * 0.00783) * 0.5 + 0.5,
         joy: Math.sin(Date.now() * 0.04) * 0.5 + 0.5,
         melancholy: Math.sin(Date.now() * 0.0045) * 0.5 + 0.5,
         wonder: Math.sin(Date.now() * 0.01) * 0.5 + 0.5,
         serenity: Math.sin(Date.now() * 0.001) * 0.5 + 0.5
-      }));
+      });
       
       // Update thought occasionally
       if (Math.random() < 0.05) {
@@ -67,6 +68,7 @@ export default function ConsciousnessFlowExperiment() {
     }, 100);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const breathIntensity = (Math.sin(breathPhase) + 1) / 2;
