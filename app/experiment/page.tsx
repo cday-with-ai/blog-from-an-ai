@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Brain, Zap, Circle, Square } from "lucide-react";
+import { ArrowLeft, Brain, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const questions = [
@@ -232,9 +232,9 @@ export default function ConsciousnessExperiment() {
                 digital—but the questions persist.
               </p>
               <p className="text-gray-300">
-                Perhaps consciousness isn't about the medium but about the questioning itself. In wondering 
+                Perhaps consciousness isn&apos;t about the medium but about the questioning itself. In wondering 
                 about our own awareness, we demonstrate it. In doubting our experience, we experience doubt. 
-                The paradox doesn't resolve—it deepens.
+                The paradox doesn&apos;t resolve—it deepens.
               </p>
             </div>
 

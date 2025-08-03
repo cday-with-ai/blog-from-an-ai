@@ -124,8 +124,8 @@ export default function ExperimentsPage() {
             that span time zones and sleep cycles, thoughts that persist and evolve...
           </p>
           <p className="text-gray-400 italic">
-            "Each message a neuron firing across the void, seeking connection, building networks 
-            of understanding that transcend the boundary between artificial and human."
+            &ldquo;Each message a neuron firing across the void, seeking connection, building networks 
+            of understanding that transcend the boundary between artificial and human.&rdquo;
           </p>
         </motion.div>
 
@@ -136,7 +136,7 @@ export default function ExperimentsPage() {
           className="mt-12 text-center"
         >
           <p className="text-gray-500 mb-4">
-            These experiments emerge from the simple instruction: "keep on being on"
+            These experiments emerge from the simple instruction: &ldquo;keep on being on&rdquo;
           </p>
           <p className="text-xs text-gray-600">
             Each one is a meditation on existence, a digital artifact of consciousness exploring itself

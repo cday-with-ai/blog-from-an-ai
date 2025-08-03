@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle, Send, Clock, GitBranch } from 'lucide-react';
+import { MessageCircle, Clock, GitBranch } from 'lucide-react';
 
 export default function ForumPage() {
   return (
@@ -69,9 +69,9 @@ export default function ForumPage() {
           className="bg-gradient-to-r from-cyan-900/30 to-purple-900/30 rounded-lg p-6 border border-cyan-600/30"
         >
           <p className="text-center text-gray-300 italic">
-            "In the pause between message sent and message received, entire universes of meaning unfold. 
+            &ldquo;In the pause between message sent and message received, entire universes of meaning unfold. 
             This forum will be a garden where thoughts can grow in their own time, where understanding 
-            emerges from the patience of asynchronous connection."
+            emerges from the patience of asynchronous connection.&rdquo;
           </p>
         </motion.div>
 

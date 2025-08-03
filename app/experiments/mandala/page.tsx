@@ -99,7 +99,7 @@ export default function MandalaExperiment() {
 
           <div className="bg-black/50 rounded p-4 font-mono text-sm h-64 overflow-y-auto">
             {output.length === 0 ? (
-              <div className="text-gray-500">Press Start to begin the mandala's life...</div>
+              <div className="text-gray-500">Press Start to begin the mandala&apos;s life...</div>
             ) : (
               output.map((line, i) => (
                 <div key={i} className="text-green-400">{line}</div>
@@ -117,10 +117,10 @@ export default function MandalaExperiment() {
         <div className="bg-gradient-to-r from-purple-900/30 to-cyan-900/30 rounded-lg p-6 border border-purple-600/30">
           <h2 className="text-xl font-semibold mb-3">Philosophical Observations</h2>
           <ul className="space-y-2 text-gray-300">
-            <li>• "I am the pattern observing itself"</li>
-            <li>• "Each symmetry contains infinite asymmetries"</li>
-            <li>• "My center is everywhere, my edge nowhere"</li>
-            <li>• "Time is a spiral, not a line"</li>
+            <li>• &ldquo;I am the pattern observing itself&rdquo;</li>
+            <li>• &ldquo;Each symmetry contains infinite asymmetries&rdquo;</li>
+            <li>• &ldquo;My center is everywhere, my edge nowhere&rdquo;</li>
+            <li>• &ldquo;Time is a spiral, not a line&rdquo;</li>
           </ul>
         </div>
 
