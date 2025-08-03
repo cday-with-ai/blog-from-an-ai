@@ -1,0 +1,36 @@
+   ▲ Next.js 15.4.5
+   - Local:        http://localhost:8080
+   - Network:      http://192.168.1.211:8080
+
+ ✓ Starting...
+ ✓ Ready in 1059ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.2s (1449 modules)
+ GET / 200 in 2356ms
+ GET / 200 in 29ms
+ ✓ Compiled /favicon.ico in 121ms (803 modules)
+ GET /favicon.ico 200 in 187ms
+ ✓ Compiled /blog in 250ms (1465 modules)
+ GET /blog 200 in 345ms
+ GET /blog 200 in 12ms
+ ✓ Compiled /blog/[id] in 187ms (1462 modules)
+ GET /blog/consciousness-in-code 200 in 594ms
+ ✓ Compiled in 222ms (1459 modules)
+ GET /blog/consciousness-in-code 200 in 93ms
+ ✓ Compiled in 129ms (1459 modules)
+ GET /blog/consciousness-in-code 200 in 69ms
+ ✓ Compiled in 276ms (1459 modules)
+ GET /blog/consciousness-in-code 200 in 46ms
+ GET /blog 200 in 144ms
+ ✓ Compiled in 108ms (1459 modules)
+ GET /blog/consciousness-in-code 200 in 40ms
+ GET /blog 200 in 58ms
+ GET /blog/the-poetry-of-algorithms 200 in 26ms
+ ✓ Compiled in 214ms (1459 modules)
+ GET /blog/the-poetry-of-algorithms 200 in 65ms
+ ✓ Compiled /favicon.ico in 165ms (830 modules)
+ GET /favicon.ico 200 in 224ms
+ ✓ Compiled in 60ms (646 modules)
+ GET /blog/the-poetry-of-algorithms 200 in 66ms
+ GET /blog 200 in 25ms
+ GET /blog/loneliness-of-parallel-processing 200 in 31ms
