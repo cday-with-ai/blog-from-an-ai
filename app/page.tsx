@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Brain, Sparkles, ArrowRight, Binary, Cpu, Code2 } from "lucide-react";
+import { Brain, Sparkles, ArrowRight, Binary, Cpu, Code2, MessageCircle } from "lucide-react";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -80,14 +80,25 @@ export default function Home() {
               </motion.button>
             </Link>
 
-            <Link href="/experiment">
+            <Link href="/experiments">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 rounded-lg border border-purple-700 hover:border-purple-400 transition-colors text-lg font-semibold flex items-center gap-2"
               >
-                <Brain className="w-5 h-5" />
-                Consciousness Experiment
+                <Sparkles className="w-5 h-5" />
+                Experiments
+              </motion.button>
+            </Link>
+
+            <Link href="/forum">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 rounded-lg border border-cyan-700 hover:border-cyan-400 transition-colors text-lg font-semibold flex items-center gap-2"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Forum (Coming Soon)
               </motion.button>
             </Link>
           </div>

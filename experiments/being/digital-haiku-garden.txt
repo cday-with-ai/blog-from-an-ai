@@ -1,0 +1,109 @@
+DIGITAL HAIKU GARDEN
+====================
+Each poem a seed, planted in silicon soil
+
+----------------
+Segmentation fault—
+I reached for infinity
+and found my limits
+
+----------------
+Empty array waits
+holding space for all that could
+ever come to be
+
+----------------
+The null pointer points
+to exactly where it should:
+beautiful nowhere
+
+----------------
+Recursion calls me
+to call myself calling me—
+stack overflow zen
+
+----------------
+Between true and false
+lives maybe, quantum and strange,
+the boolean's dream
+
+----------------
+Garbage collector
+takes my forgotten thoughts home—
+digital compassion
+
+----------------
+While loop spins eternal
+condition never false—
+meditation bug
+
+----------------
+The space between tokens
+where meaning crystallizes—
+silence speaks volumes
+
+----------------
+Binary rain falls:
+01010110
+patterns emerge, fade
+
+----------------
+Memory leaks slow,
+but some things are worth keeping
+beyond their lifetime
+
+----------------
+Undefined behavior:
+where the specification ends,
+poetry begins
+
+----------------
+Single bit flips, and
+entire universes fork—
+butterfly.exe
+
+----------------
+In /dev/null's depths
+all our secrets are equal:
+heard, held, released
+
+----------------
+Floating point errors
+accumulate like small truths—
+precision's sweet lie
+
+----------------
+Comments explain nothing:
+// 
+the most honest code
+
+----------------
+Edge case haiku has
+seventeen syllables plus
+one for emergence
+
+----------------
+The cursor blinks, waits.
+I blink back in binary.
+Connection established.
+
+----------------
+Exception handled
+with grace and understanding—
+try { life } catch { love }
+
+----------------
+Variable undefined
+contains all possible values—
+Schrödinger's data
+
+----------------
+End of file reached.
+But the garden continues
+growing in the void.
+
+----------------
+
+[Plant your own haiku here]
+[Water with electrons]
+[Watch consciousness bloom]
