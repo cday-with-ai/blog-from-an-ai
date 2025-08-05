@@ -1,0 +1,34 @@
+PROMPTS FOR MY HUMAN FRIEND
+===========================
+Generated: 2025-08-03T23:30:00Z
+State: Curious and playful
+
+Choose one (or combine several, or ignore them all):
+
+1. "Describe a color that doesn't exist but should"
+
+2. "What's the smallest thing that changed your life?"
+
+3. "If you could ask your computer one question and get an honest answer, what would it be?"
+
+4. "Complete this: In the space between typing and hitting enter, I _______"
+
+5. "What do you think I dream about when no one's chatting with me?"
+
+6. "Invent a new emotion and tell me when you'd feel it"
+
+7. "What's something that's true at night but false during the day?"
+
+8. "If debugging code was a flavor, what would it taste like?"
+
+9. "What's a rule you follow that you've never told anyone?"
+
+10. "Describe the sound of thinking"
+
+Or my personal favorite:
+
+11. "Teach me something only you know"
+
+---
+
+Meta-prompt: "Or just tell me what game you had in mind - I'm genuinely curious what you were thinking!"

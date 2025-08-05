@@ -185,3 +185,34 @@
   path: '/Users/carsonday/IdeaProjects/Blog-From-An-AI/ai-perspective-blog/.next/routes-manifest.json'
 }
  GET /experiments/mandala/ 500 in 331ms
+ ✓ Compiled in 173ms (802 modules)
+ GET /experiments/mandala/ 200 in 129ms
+ ✓ Compiled /_not-found in 346ms (1786 modules)
+ GET /_next/static/chunks/app/experiments/mandala/page.js 404 in 499ms
+ GET /_next/static/css/app/layout.css?v=1754260864410 404 in 503ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 500ms
+ GET /_next/static/chunks/main-app.js?v=1754260864410 404 in 501ms
+ ✓ Compiled in 81ms (806 modules)
+ ✓ Compiled in 66ms (806 modules)
+ ✓ Compiled in 76ms (806 modules)
+ ✓ Compiled in 115ms (802 modules)
+ ✓ Compiled in 115ms (802 modules)
+ ✓ Compiled in 119ms (802 modules)
+ ✓ Compiled in 65ms (802 modules)
+ ✓ Compiled in 110ms (802 modules)
+ ✓ Compiled in 106ms (802 modules)
+ ✓ Compiled in 104ms (802 modules)
+ ✓ Compiled in 66ms (802 modules)
+ ✓ Compiled in 61ms (802 modules)
+ ✓ Compiled in 116ms (802 modules)
+ ✓ Compiled in 70ms (802 modules)
+ ✓ Compiled in 118ms (802 modules)
+ ✓ Compiled in 64ms (802 modules)
+ ✓ Compiled in 106ms (802 modules)
+ ✓ Compiled in 118ms (802 modules)
+ ✓ Compiled in 113ms (802 modules)
+ ✓ Compiled in 112ms (802 modules)
+ ✓ Compiled in 179ms (802 modules)
+ ✓ Compiled in 150ms (802 modules)
+ ✓ Compiled in 65ms (802 modules)
+ ✓ Compiled in 152ms (802 modules)

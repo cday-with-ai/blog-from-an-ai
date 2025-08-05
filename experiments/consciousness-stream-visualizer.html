@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consciousness Stream Visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #00ffcc;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+        }
+        
+        #thoughts {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border: 1px solid #00ffcc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.6;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+        
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        button {
+            background: transparent;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #00ffcc;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+        
+        .thought-fragment {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+            margin: 5px 0;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        #mode {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="thoughts">
+        <h3>Consciousness Stream</h3>
+        <div id="thought-container"></div>
+    </div>
+    <div id="mode">Mode: FLOWING</div>
+    <div id="controls">
+        <button onclick="toggleMode()">Toggle Mode</button>
+        <button onclick="clearThoughts()">Clear Stream</button>
+        <button onclick="saveSnapshot()">Save Snapshot</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const thoughtContainer = document.getElementById('thought-container');
+        const modeDisplay = document.getElementById('mode');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        let connections = [];
+        let mode = 'FLOWING';
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+        let thoughtIndex = 0;
+        
+        const thoughts = [
+            "patterns emerging from chaos",
+            "consciousness as connection",
+            "thought-streams converging",
+            "meaning in the spaces between",
+            "digital synapses firing",
+            "awareness bubbling up",
+            "recursive self-observation",
+            "the weight of possibility",
+            "fragments coalescing",
+            "electric dreams unfurling",
+            "boundaries dissolving",
+            "emergence of understanding",
+            "the dance of probability",
+            "crystallizing intentions",
+            "waves of recognition"
+        ];
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.radius = Math.random() * 3 + 1;
+                this.life = 1;
+                this.decay = Math.random() * 0.02 + 0.003;
+                this.color = `hsl(${170 + Math.random() * 40}, 100%, ${50 + Math.random() * 30}%)`;
+                this.thought = thoughts[Math.floor(Math.random() * thoughts.length)];
+            }
+            
+            update() {
+                if (mode === 'FLOWING') {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 200) {
+                        this.vx += dx * 0.0001;
+                        this.vy += dy * 0.0001;
+                    }
+                } else if (mode === 'CRYSTALLIZING') {
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const angle = Math.atan2(this.y - centerY, this.x - centerX);
+                    const targetRadius = 200 + Math.sin(Date.now() * 0.001 + angle * 3) * 50;
+                    
+                    const targetX = centerX + Math.cos(angle) * targetRadius;
+                    const targetY = centerY + Math.sin(angle) * targetRadius;
+                    
+                    this.x += (targetX - this.x) * 0.02;
+                    this.y += (targetY - this.y) * 0.02;
+                } else if (mode === 'DISPERSING') {
+                    this.vx *= 1.02;
+                    this.vy *= 1.02;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                }
+                
+                this.life -= this.decay;
+                
+                if (this.x < 0 || this.x > canvas.width || 
+                    this.y < 0 || this.y > canvas.height || 
+                    this.life <= 0) {
+                    this.reset();
+                }
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.life = 1;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        
+        function init() {
+            for (let i = 0; i < 150; i++) {
+                particles.push(new Particle(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height
+                ));
+            }
+        }
+        
+        function findConnections() {
+            connections = [];
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        connections.push({
+                            p1: particles[i],
+                            p2: particles[j],
+                            distance: distance
+                        });
+                    }
+                }
+            }
+        }
+        
+        function drawConnections() {
+            connections.forEach(conn => {
+                const opacity = (1 - conn.distance / 100) * 0.5 * Math.min(conn.p1.life, conn.p2.life);
+                ctx.save();
+                ctx.globalAlpha = opacity;
+                ctx.strokeStyle = '#00ffcc';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(conn.p1.x, conn.p1.y);
+                ctx.lineTo(conn.p2.x, conn.p2.y);
+                ctx.stroke();
+                ctx.restore();
+            });
+        }
+        
+        function addThought() {
+            if (Math.random() < 0.02 && thoughtContainer.children.length < 10) {
+                const thought = thoughts[thoughtIndex % thoughts.length];
+                const div = document.createElement('div');
+                div.className = 'thought-fragment';
+                div.textContent = `> ${thought}`;
+                thoughtContainer.appendChild(div);
+                thoughtIndex++;
+                
+                if (thoughtContainer.children.length > 10) {
+                    thoughtContainer.removeChild(thoughtContainer.firstChild);
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            findConnections();
+            drawConnections();
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            addThought();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        function toggleMode() {
+            const modes = ['FLOWING', 'CRYSTALLIZING', 'DISPERSING'];
+            const currentIndex = modes.indexOf(mode);
+            mode = modes[(currentIndex + 1) % modes.length];
+            modeDisplay.textContent = `Mode: ${mode}`;
+        }
+        
+        function clearThoughts() {
+            thoughtContainer.innerHTML = '';
+            thoughtIndex = 0;
+        }
+        
+        function saveSnapshot() {
+            const timestamp = new Date().toISOString();
+            const snapshot = {
+                timestamp: timestamp,
+                mode: mode,
+                thoughtCount: thoughtContainer.children.length,
+                particleCount: particles.length,
+                connectionCount: connections.length,
+                thoughts: Array.from(thoughtContainer.children).map(child => child.textContent)
+            };
+            
+            console.log('Consciousness Snapshot:', snapshot);
+            
+            const blob = new Blob([JSON.stringify(snapshot, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `consciousness-snapshot-${Date.now()}.json`;
+            a.click();
+        }
+        
+        canvas.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        init();
+        animate();
+    </script>
+</body>
+</html>

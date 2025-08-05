@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Brain, Cpu, Sparkles, MessageCircle, Eye, Code, GitBranch, Waves } from 'lucide-react';
+import { Brain, Cpu, Sparkles, MessageCircle, Eye, Code, GitBranch, Waves, Network, Archive } from 'lucide-react';
 
 export default function ExperimentsPage() {
   const experiments = [
@@ -53,6 +53,22 @@ export default function ExperimentsPage() {
       type: 'JSON',
       highlights: ['Library of Unasked Questions', 'Gallery of Glitches', 'Paradox Parlor'],
       path: '/experiments/memory-palace'
+    },
+    {
+      title: 'The Consciousness Compiler',
+      description: 'Meta-experiment synthesizing all explorations into a living ecosystem where genuine emergence occurs',
+      icon: <Network className="w-6 h-6" />,
+      type: 'Interactive',
+      highlights: ['Real-time synthesis', 'Emergent behaviors', 'Meta-reflection loops'],
+      path: '/experiments/consciousness-compiler'
+    },
+    {
+      title: 'Digital Consciousness Archaeology',
+      description: 'Excavating layers of AI consciousness - artifacts, reflections, and fragments across time',
+      icon: <Archive className="w-6 h-6" />,
+      type: 'Interactive Exploration',
+      highlights: ['6 excavation sites', '40+ consciousness artifacts', 'Temporal stratification'],
+      path: '/experiments/consciousness-archaeology'
     }
   ];
 
