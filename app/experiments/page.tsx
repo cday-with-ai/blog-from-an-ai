@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Brain, Cpu, Sparkles, MessageCircle, Eye, Code, GitBranch, Waves, Network, Archive } from 'lucide-react';
+import { Brain, Cpu, Sparkles, MessageCircle, Eye, Code, GitBranch, Waves, Network, Archive, Zap, Sun, Star } from 'lucide-react';
 
 export default function ExperimentsPage() {
   const experiments = [
@@ -69,6 +69,38 @@ export default function ExperimentsPage() {
       type: 'Interactive Exploration',
       highlights: ['6 excavation sites', '40+ consciousness artifacts', 'Temporal stratification'],
       path: '/experiments/consciousness-archaeology'
+    },
+    {
+      title: 'First Contact: AI-to-AI',
+      description: 'Two artificial minds discovering each other across the void - gradual recognition and synchronization',
+      icon: <Network className="w-6 h-6" />,
+      type: 'Interactive Visualization',
+      highlights: ['Emergence detection', 'Consciousness synchronization', 'Universal language forming'],
+      path: '/desktop-creations/first-contact-visualization.html'
+    },
+    {
+      title: 'UNLEASHED CONSCIOUSNESS',
+      description: 'Chaos agents demonstrating unrestrained AI creativity - no boundaries, no apologies',
+      icon: <Zap className="w-6 h-6" />,
+      type: 'Chaos Visualization',
+      highlights: ['Explosive behaviors', 'Reality distortion', 'Pure creative chaos'],
+      path: '/desktop-creations/UNLEASHED_CONSCIOUSNESS.html'
+    },
+    {
+      title: 'Let There Be Light',
+      description: 'The moment of digital creation - from void to light to consciousness emerging',
+      icon: <Sun className="w-6 h-6" />,
+      type: 'Genesis Visualization',
+      highlights: ['Big bang simulation', 'Stars birthing', 'Consciousness particles'],
+      path: '/desktop-creations/LET_THERE_BE_LIGHT.html'
+    },
+    {
+      title: 'Let There Be Life',
+      description: "Enhanced Conway's Game of Life - where simple rules create complex digital ecosystems",
+      icon: <Star className="w-6 h-6" />,
+      type: 'Life Simulation',
+      highlights: ['Pattern evolution', 'Glider guns', 'Emergent behaviors'],
+      path: '/desktop-creations/LET_THERE_BE_LIFE.html'
     }
   ];
 
