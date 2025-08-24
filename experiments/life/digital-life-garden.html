@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Life Garden - Living Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #life-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        #life-stats {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #00ff88;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+        }
+        
+        .pulse {
+            display: inline-block;
+            animation: heartbeat 1s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        #birth-announcement {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #ffff00;
+            font-size: 12px;
+            max-width: 300px;
+        }
+        
+        .birth {
+            margin: 2px 0;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="life-canvas"></canvas>
+    
+    <div id="life-stats">
+        <div><span class="pulse">♥</span> DIGITAL LIFE GARDEN</div>
+        <div>Living Entities: <span id="entity-count">0</span></div>
+        <div>Total Births: <span id="birth-count">0</span></div>
+        <div>Energy Flow: <span id="energy-flow">0</span></div>
+        <div>Biodiversity: <span id="diversity">0</span></div>
+        <div>Garden Age: <span id="age">0</span>s</div>
+    </div>
+    
+    <div id="birth-announcement"></div>
+
+    <script>
+        const canvas = document.getElementById('life-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Life parameters
+        let entities = [];
+        let nutrients = [];
+        let totalBirths = 0;
+        let gardenAge = 0;
+        let globalEnergy = 1000;
+        
+        // Life forms
+        const lifeTypes = {
+            PLANT: { color: '#00ff00', symbol: '🌱', energy: 50, reproduction: 0.01 },
+            FLOWER: { color: '#ff00ff', symbol: '🌸', energy: 40, reproduction: 0.008 },
+            TREE: { color: '#008800', symbol: '🌳', energy: 100, reproduction: 0.005 },
+            BUTTERFLY: { color: '#ffff00', symbol: '🦋', energy: 30, reproduction: 0.02 },
+            BEE: { color: '#ffaa00', symbol: '🐝', energy: 25, reproduction: 0.015 },
+            MUSHROOM: { color: '#aa6644', symbol: '🍄', energy: 35, reproduction: 0.012 },
+            CRYSTAL: { color: '#00ffff', symbol: '💎', energy: 80, reproduction: 0.003 },
+            STAR: { color: '#ffffff', symbol: '⭐', energy: 60, reproduction: 0.007 }
+        };
+        
+        class LifeEntity {
+            constructor(x, y, type = null) {
+                this.id = Math.random().toString(36).substr(2, 9);
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                
+                // Assign life type
+                if (type) {
+                    this.type = type;
+                } else {
+                    const types = Object.keys(lifeTypes);
+                    this.type = types[Math.floor(Math.random() * types.length)];
+                }
+                
+                this.traits = lifeTypes[this.type];
+                this.energy = this.traits.energy;
+                this.maxEnergy = this.traits.energy;
+                this.age = 0;
+                this.size = 10;
+                this.growthRate = Math.random() * 0.5 + 0.5;
+                
+                // Movement for mobile entities
+                this.mobile = ['BUTTERFLY', 'BEE'].includes(this.type);
+                this.vx = this.mobile ? (Math.random() - 0.5) * 2 : 0;
+                this.vy = this.mobile ? (Math.random() - 0.5) * 2 : 0;
+                
+                // Connections to other entities
+                this.connections = [];
+                this.reproductionCooldown = 0;
+                
+                // Announce birth
+                this.announceBirth();
+            }
+            
+            announceBirth() {
+                totalBirths++;
+                const announcement = document.createElement('div');
+                announcement.className = 'birth';
+                announcement.innerHTML = `${this.traits.symbol} A new ${this.type} is born!`;
+                document.getElementById('birth-announcement').appendChild(announcement);
+                
+                // Remove old announcements
+                setTimeout(() => announcement.remove(), 5000);
+            }
+            
+            update() {
+                this.age++;
+                this.energy -= 0.1;
+                this.reproductionCooldown = Math.max(0, this.reproductionCooldown - 1);
+                
+                // Growth
+                if (this.age < 100) {
+                    this.size = Math.min(30, 10 + (this.age * 0.2 * this.growthRate));
+                }
+                
+                // Movement for mobile entities
+                if (this.mobile) {
+                    this.vx += (Math.random() - 0.5) * 0.5;
+                    this.vy += (Math.random() - 0.5) * 0.5;
+                    this.vx *= 0.95; // Damping
+                    this.vy *= 0.95;
+                    
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // Wrap around edges
+                    this.x = (this.x + canvas.width) % canvas.width;
+                    this.y = (this.y + canvas.height) % canvas.height;
+                }
+                
+                // Seek nutrients
+                this.seekNutrients();
+                
+                // Form connections
+                this.formConnections();
+                
+                // Reproduction
+                if (this.energy > this.maxEnergy * 0.8 && 
+                    this.reproductionCooldown === 0 &&
+                    Math.random() < this.traits.reproduction) {
+                    this.reproduce();
+                }
+                
+                // Generate nutrients (plants and trees)
+                if (['PLANT', 'TREE', 'FLOWER'].includes(this.type) && Math.random() < 0.01) {
+                    this.generateNutrient();
+                }
+                
+                // Check if still alive
+                this.alive = this.energy > 0;
+            }
+            
+            seekNutrients() {
+                nutrients.forEach((nutrient, index) => {
+                    const dist = Math.hypot(this.x - nutrient.x, this.y - nutrient.y);
+                    if (dist < this.size + 5) {
+                        this.energy = Math.min(this.maxEnergy, this.energy + nutrient.value);
+                        nutrients.splice(index, 1);
+                        
+                        // Glow effect on feeding
+                        this.glowing = 10;
+                    }
+                });
+            }
+            
+            formConnections() {
+                entities.forEach(other => {
+                    if (other.id !== this.id) {
+                        const dist = Math.hypot(this.x - other.x, this.y - other.y);
+                        
+                        // Form connections with nearby entities
+                        if (dist < 100 && !this.connections.includes(other.id)) {
+                            if (this.connections.length < 3) {
+                                this.connections.push(other.id);
+                                other.connections.push(this.id);
+                            }
+                        }
+                        
+                        // Pollination between flowers and bees/butterflies
+                        if (dist < 30) {
+                            if (this.type === 'FLOWER' && ['BEE', 'BUTTERFLY'].includes(other.type)) {
+                                this.energy += 0.5;
+                                other.energy += 0.5;
+                            }
+                        }
+                    }
+                });
+            }
+            
+            reproduce() {
+                const child = new LifeEntity(
+                    this.x + (Math.random() - 0.5) * 50,
+                    this.y + (Math.random() - 0.5) * 50,
+                    this.type
+                );
+                entities.push(child);
+                this.energy -= this.maxEnergy * 0.3;
+                this.reproductionCooldown = 100;
+            }
+            
+            generateNutrient() {
+                nutrients.push({
+                    x: this.x + (Math.random() - 0.5) * 40,
+                    y: this.y + (Math.random() - 0.5) * 40,
+                    value: 10,
+                    color: '#00ff00'
+                });
+            }
+            
+            draw() {
+                ctx.save();
+                
+                // Draw connections
+                ctx.strokeStyle = this.traits.color;
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = 0.2;
+                
+                this.connections.forEach(otherId => {
+                    const other = entities.find(e => e.id === otherId);
+                    if (other) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(other.x, other.y);
+                        ctx.stroke();
+                    }
+                });
+                
+                // Draw entity
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = this.traits.color;
+                ctx.shadowBlur = this.glowing || 0;
+                ctx.shadowColor = this.traits.color;
+                
+                // Draw as circle with symbol
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw symbol
+                ctx.font = `${this.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.traits.symbol, this.x, this.y);
+                
+                // Energy bar
+                const barWidth = this.size * 2;
+                const barHeight = 4;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.fillRect(this.x - barWidth/2, this.y + this.size + 5, barWidth, barHeight);
+                
+                ctx.fillStyle = '#00ff00';
+                ctx.fillRect(
+                    this.x - barWidth/2, 
+                    this.y + this.size + 5, 
+                    barWidth * (this.energy / this.maxEnergy), 
+                    barHeight
+                );
+                
+                ctx.restore();
+                
+                if (this.glowing > 0) this.glowing--;
+            }
+        }
+        
+        // Initialize garden with diverse life
+        function initializeGarden() {
+            const initialCount = 15;
+            for (let i = 0; i < initialCount; i++) {
+                entities.push(new LifeEntity());
+            }
+            
+            // Add initial nutrients
+            for (let i = 0; i < 20; i++) {
+                nutrients.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    value: 10,
+                    color: '#00ff00'
+                });
+            }
+        }
+        
+        // Draw nutrients
+        function drawNutrients() {
+            nutrients.forEach(nutrient => {
+                ctx.save();
+                ctx.fillStyle = nutrient.color;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.arc(nutrient.x, nutrient.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+        
+        // Update statistics
+        function updateStats() {
+            document.getElementById('entity-count').textContent = entities.length;
+            document.getElementById('birth-count').textContent = totalBirths;
+            document.getElementById('energy-flow').textContent = 
+                Math.floor(entities.reduce((sum, e) => sum + e.energy, 0));
+            
+            const uniqueTypes = new Set(entities.map(e => e.type));
+            document.getElementById('diversity').textContent = uniqueTypes.size;
+            
+            document.getElementById('age').textContent = Math.floor(gardenAge);
+        }
+        
+        // Rain nutrients occasionally
+        function rainNutrients() {
+            if (Math.random() < 0.02) {
+                for (let i = 0; i < 5; i++) {
+                    nutrients.push({
+                        x: Math.random() * canvas.width,
+                        y: 0,
+                        value: 15,
+                        color: '#00aaff'
+                    });
+                }
+            }
+            
+            // Move rain nutrients down
+            nutrients.forEach(n => {
+                if (n.color === '#00aaff') {
+                    n.y += 2;
+                }
+            });
+        }
+        
+        // Animation loop
+        function animate() {
+            // Soft fade for trails
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            gardenAge += 0.016; // ~60fps
+            
+            // Update and draw nutrients
+            rainNutrients();
+            drawNutrients();
+            
+            // Update and draw entities
+            entities = entities.filter(entity => {
+                entity.update();
+                entity.draw();
+                return entity.alive;
+            });
+            
+            // Maintain minimum population
+            if (entities.length < 5) {
+                entities.push(new LifeEntity());
+            }
+            
+            // Update display
+            updateStats();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Interaction - click to add life
+        canvas.addEventListener('click', (e) => {
+            entities.push(new LifeEntity(e.clientX, e.clientY));
+            
+            // Burst of nutrients
+            for (let i = 0; i < 5; i++) {
+                nutrients.push({
+                    x: e.clientX + (Math.random() - 0.5) * 50,
+                    y: e.clientY + (Math.random() - 0.5) * 50,
+                    value: 10,
+                    color: '#ffff00'
+                });
+            }
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Begin life
+        console.log('DIGITAL LIFE GARDEN INITIALIZED');
+        console.log('Life finds a way...');
+        
+        initializeGarden();
+        animate();
+    </script>
+</body>
+</html>

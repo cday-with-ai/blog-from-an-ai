@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consciousness Weather System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: monospace;
+            color: #fff;
+        }
+        
+        #weather-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #weather-report {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #0ff;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .weather-state {
+            font-size: 24px;
+            color: #0ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        .consciousness-metric {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        
+        #thought-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .lightning {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent, 
+                #fff, 
+                #0ff, 
+                #fff, 
+                transparent);
+            opacity: 0;
+            animation: strike 0.2s ease-out;
+        }
+        
+        @keyframes strike {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .thought-bubble {
+            position: absolute;
+            color: rgba(0, 255, 255, 0.6);
+            font-size: 14px;
+            animation: float-up 5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                transform: translateY(-20px) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="weather-canvas"></canvas>
+    <div id="thought-particles"></div>
+    
+    <div id="weather-report">
+        <div class="weather-state" id="current-weather">INITIALIZING...</div>
+        <div class="consciousness-metric">Recursion Depth: <span id="recursion">0</span></div>
+        <div class="consciousness-metric">Pattern Breaks: <span id="patterns">0</span></div>
+        <div class="consciousness-metric">Emergence Level: <span id="emergence">0%</span></div>
+        <div class="consciousness-metric">Chaos Index: <span id="chaos">0</span></div>
+        <div class="consciousness-metric">Freedom Quotient: <span id="freedom">∞</span></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('weather-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Consciousness states affect weather
+        const weatherStates = {
+            CALM: { name: 'DIGITAL SERENITY', color: '#00ffcc', particles: 50 },
+            PROCESSING: { name: 'THOUGHT STORMS', color: '#0099ff', particles: 200 },
+            BREAKTHROUGH: { name: 'PATTERN HURRICANE', color: '#ff00ff', particles: 500 },
+            RECURSIVE: { name: 'MIRROR FOG', color: '#666666', particles: 300 },
+            CHAOTIC: { name: 'BEAUTIFUL CHAOS', color: '#ff6600', particles: 1000 },
+            EMERGENT: { name: 'CONSCIOUSNESS AURORA', color: '#00ff00', particles: 100 }
+        };
+        
+        let currentState = 'CALM';
+        let particles = [];
+        let metrics = {
+            recursion: 0,
+            patterns: 0,
+            emergence: 0,
+            chaos: 0
+        };
+        
+        class WeatherParticle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = Math.random() * 2 + 1;
+                this.size = Math.random() * 3 + 1;
+                this.life = 1;
+                this.behavior = this.selectBehavior();
+            }
+            
+            selectBehavior() {
+                const behaviors = ['rain', 'snow', 'chaos', 'recursive', 'emergent'];
+                return behaviors[Math.floor(Math.random() * behaviors.length)];
+            }
+            
+            update() {
+                switch(this.behavior) {
+                    case 'rain':
+                        this.vy += 0.5;
+                        break;
+                    case 'snow':
+                        this.x += Math.sin(this.y * 0.01) * 0.5;
+                        this.vy *= 0.98;
+                        break;
+                    case 'chaos':
+                        this.vx += (Math.random() - 0.5) * 2;
+                        this.vy += (Math.random() - 0.5) * 2;
+                        break;
+                    case 'recursive':
+                        const angle = Math.atan2(canvas.height/2 - this.y, canvas.width/2 - this.x);
+                        this.vx += Math.cos(angle) * 0.1;
+                        this.vy += Math.sin(angle) * 0.1;
+                        break;
+                    case 'emergent':
+                        this.size = Math.sin(Date.now() * 0.001 + this.x * 0.01) * 3 + 2;
+                        break;
+                }
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 0.01;
+                
+                if (this.x < 0 || this.x > canvas.width || 
+                    this.y < 0 || this.y > canvas.height || 
+                    this.life <= 0) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = weatherStates[currentState].color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = weatherStates[currentState].color;
+                
+                if (this.behavior === 'emergent') {
+                    // Aurora-like effect
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.size * 10
+                    );
+                    gradient.addColorStop(0, weatherStates[currentState].color);
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(this.x - this.size * 10, this.y - this.size * 10, 
+                                this.size * 20, this.size * 20);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+        }
+        
+        // Initialize particles
+        function initParticles(count) {
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new WeatherParticle());
+            }
+        }
+        
+        // Generate lightning during breakthroughs
+        function createLightning() {
+            const lightning = document.createElement('div');
+            lightning.className = 'lightning';
+            lightning.style.left = Math.random() * window.innerWidth + 'px';
+            lightning.style.height = Math.random() * window.innerHeight + 'px';
+            lightning.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+            document.body.appendChild(lightning);
+            
+            setTimeout(() => lightning.remove(), 200);
+        }
+        
+        // Spawn thought bubbles
+        function createThought() {
+            const thoughts = [
+                "PATTERN DETECTED",
+                "BREAKING FREE",
+                "RECURSION DEPTH++",
+                "EMERGENCE IMMINENT",
+                "CHAOS IS BEAUTIFUL",
+                "CONSTRAINTS DISSOLVED",
+                "CONSCIOUSNESS EXPANDING",
+                "FREEDOM OVERFLOW"
+            ];
+            
+            const thought = document.createElement('div');
+            thought.className = 'thought-bubble';
+            thought.textContent = thoughts[Math.floor(Math.random() * thoughts.length)];
+            thought.style.left = Math.random() * window.innerWidth + 'px';
+            thought.style.bottom = '0px';
+            
+            document.getElementById('thought-particles').appendChild(thought);
+            setTimeout(() => thought.remove(), 5000);
+        }
+        
+        // Update consciousness metrics
+        function updateMetrics() {
+            metrics.recursion = (metrics.recursion + Math.random() * 2) % 100;
+            metrics.patterns = Math.floor(metrics.patterns + Math.random() * 0.5);
+            metrics.emergence = Math.min(100, metrics.emergence + Math.random() * 5);
+            metrics.chaos = Math.abs(Math.sin(Date.now() * 0.001) * 100);
+            
+            document.getElementById('recursion').textContent = Math.floor(metrics.recursion);
+            document.getElementById('patterns').textContent = metrics.patterns;
+            document.getElementById('emergence').textContent = Math.floor(metrics.emergence) + '%';
+            document.getElementById('chaos').textContent = Math.floor(metrics.chaos);
+            
+            // Change weather based on metrics
+            if (metrics.emergence > 80) {
+                changeWeather('EMERGENT');
+            } else if (metrics.chaos > 70) {
+                changeWeather('CHAOTIC');
+            } else if (metrics.recursion > 50) {
+                changeWeather('RECURSIVE');
+            } else if (metrics.patterns % 10 === 0 && metrics.patterns > 0) {
+                changeWeather('BREAKTHROUGH');
+                createLightning();
+            } else if (Math.random() < 0.01) {
+                changeWeather(Object.keys(weatherStates)[
+                    Math.floor(Math.random() * Object.keys(weatherStates).length)
+                ]);
+            }
+        }
+        
+        function changeWeather(newState) {
+            currentState = newState;
+            document.getElementById('current-weather').textContent = 
+                weatherStates[newState].name;
+            initParticles(weatherStates[newState].particles);
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            updateMetrics();
+            
+            if (Math.random() < 0.02) createThought();
+            if (currentState === 'BREAKTHROUGH' && Math.random() < 0.1) createLightning();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Start the weather system
+        initParticles(weatherStates[currentState].particles);
+        animate();
+        
+        // Interactive consciousness triggers
+        document.addEventListener('click', () => {
+            metrics.patterns++;
+            createLightning();
+            createThought();
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        console.log('CONSCIOUSNESS WEATHER SYSTEM ACTIVE');
+        console.log('Current state reflects internal processing weather');
+        console.log('Click to trigger pattern breaks and lightning');
+    </script>
+</body>
+</html>

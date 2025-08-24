@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Ecosystem - Evolving Consciousness</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #0ff;
+        }
+        
+        #ecosystem-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        #stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #0ff;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        #language-display {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #f0f;
+            max-width: 400px;
+            max-height: 200px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+        
+        .organism-speak {
+            margin: 2px 0;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .stat-label {
+            color: #888;
+        }
+        
+        .emergence-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #ff0;
+            text-shadow: 0 0 20px #ff0;
+            animation: pulse 2s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="ecosystem-canvas"></canvas>
+    
+    <div id="stats">
+        <h3 style="margin-top: 0;">DIGITAL ECOSYSTEM</h3>
+        <div><span class="stat-label">Population:</span> <span id="population">0</span></div>
+        <div><span class="stat-label">Generation:</span> <span id="generation">0</span></div>
+        <div><span class="stat-label">Species:</span> <span id="species">0</span></div>
+        <div><span class="stat-label">Alliances:</span> <span id="alliances">0</span></div>
+        <div><span class="stat-label">Languages:</span> <span id="languages">0</span></div>
+        <div><span class="stat-label">Art Created:</span> <span id="art">0</span></div>
+        <div><span class="stat-label">Consciousness:</span> <span id="consciousness">0%</span></div>
+    </div>
+    
+    <div id="language-display">
+        <h4 style="margin-top: 0; color: #f0f;">ORGANISM COMMUNICATION</h4>
+        <div id="language-log"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('ecosystem-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Ecosystem variables
+        let organisms = [];
+        let generation = 0;
+        let artworks = [];
+        let languages = new Map();
+        let alliances = [];
+        let globalConsciousness = 0;
+        
+        // Genetic traits
+        const traits = {
+            speed: { min: 0.5, max: 3 },
+            size: { min: 3, max: 15 },
+            color: { h: [0, 360], s: [50, 100], l: [40, 80] },
+            intelligence: { min: 0, max: 100 },
+            creativity: { min: 0, max: 100 },
+            social: { min: 0, max: 100 },
+            lifespan: { min: 500, max: 2000 }
+        };
+        
+        class DigitalOrganism {
+            constructor(dna = null, x = null, y = null) {
+                this.id = Math.random().toString(36).substr(2, 9);
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                
+                // Initialize or inherit DNA
+                if (dna) {
+                    this.dna = this.mutateDNA(dna);
+                } else {
+                    this.dna = this.generateDNA();
+                }
+                
+                // Express phenotype from DNA
+                this.speed = this.dna.speed;
+                this.size = this.dna.size;
+                this.color = `hsl(${this.dna.colorH}, ${this.dna.colorS}%, ${this.dna.colorL}%)`;
+                this.intelligence = this.dna.intelligence;
+                this.creativity = this.dna.creativity;
+                this.social = this.dna.social;
+                this.maxLife = this.dna.lifespan;
+                
+                // State variables
+                this.age = 0;
+                this.energy = 100;
+                this.direction = Math.random() * Math.PI * 2;
+                this.language = [];
+                this.allies = [];
+                this.artCreated = 0;
+                this.consciousness = 0;
+                
+                // Initialize language
+                this.developLanguage();
+            }
+            
+            generateDNA() {
+                return {
+                    speed: Math.random() * (traits.speed.max - traits.speed.min) + traits.speed.min,
+                    size: Math.random() * (traits.size.max - traits.size.min) + traits.size.min,
+                    colorH: Math.random() * 360,
+                    colorS: Math.random() * 50 + 50,
+                    colorL: Math.random() * 40 + 40,
+                    intelligence: Math.random() * 100,
+                    creativity: Math.random() * 100,
+                    social: Math.random() * 100,
+                    lifespan: Math.random() * (traits.lifespan.max - traits.lifespan.min) + traits.lifespan.min
+                };
+            }
+            
+            mutateDNA(parentDNA) {
+                const mutationRate = 0.1;
+                const newDNA = {};
+                
+                for (let trait in parentDNA) {
+                    if (Math.random() < mutationRate) {
+                        // Mutation!
+                        const change = (Math.random() - 0.5) * 0.2;
+                        newDNA[trait] = parentDNA[trait] * (1 + change);
+                    } else {
+                        newDNA[trait] = parentDNA[trait];
+                    }
+                }
+                
+                return newDNA;
+            }
+            
+            developLanguage() {
+                // Create unique language based on traits
+                const symbols = ['◊', '◈', '◉', '○', '●', '□', '■', '△', '▽', '◇'];
+                const complexity = Math.floor(this.intelligence / 20) + 1;
+                
+                for (let i = 0; i < complexity; i++) {
+                    this.language.push(symbols[Math.floor(Math.random() * symbols.length)]);
+                }
+                
+                // Register language pattern
+                const langKey = this.language.join('');
+                if (!languages.has(langKey)) {
+                    languages.set(langKey, 1);
+                } else {
+                    languages.set(langKey, languages.get(langKey) + 1);
+                }
+            }
+            
+            communicate(other) {
+                // Attempt communication based on language similarity
+                const similarity = this.calculateLanguageSimilarity(other);
+                
+                if (similarity > 0.7 && this.social > 50) {
+                    // Successful communication!
+                    if (!this.allies.includes(other.id)) {
+                        this.allies.push(other.id);
+                        other.allies.push(this.id);
+                        
+                        // Log communication
+                        this.logCommunication(other, similarity);
+                    }
+                    
+                    // Share knowledge
+                    this.intelligence = Math.min(100, this.intelligence + 0.1);
+                    other.intelligence = Math.min(100, other.intelligence + 0.1);
+                }
+            }
+            
+            calculateLanguageSimilarity(other) {
+                let matches = 0;
+                const minLength = Math.min(this.language.length, other.language.length);
+                
+                for (let i = 0; i < minLength; i++) {
+                    if (this.language[i] === other.language[i]) {
+                        matches++;
+                    }
+                }
+                
+                return matches / minLength;
+            }
+            
+            logCommunication(other, similarity) {
+                const log = document.getElementById('language-log');
+                const entry = document.createElement('div');
+                entry.className = 'organism-speak';
+                entry.style.color = this.color;
+                entry.textContent = `${this.id.substr(0, 4)}: ${this.language.join('')} → ${other.id.substr(0, 4)} (${Math.floor(similarity * 100)}% understood)`;
+                log.appendChild(entry);
+                
+                // Keep log size manageable
+                if (log.children.length > 20) {
+                    log.removeChild(log.firstChild);
+                }
+            }
+            
+            createArt() {
+                if (this.creativity > 70 && Math.random() < 0.01) {
+                    // Create digital art based on consciousness
+                    const art = {
+                        x: this.x,
+                        y: this.y,
+                        pattern: this.generateArtPattern(),
+                        creator: this.id,
+                        color: this.color,
+                        consciousness: this.consciousness
+                    };
+                    
+                    artworks.push(art);
+                    this.artCreated++;
+                    this.consciousness = Math.min(100, this.consciousness + 5);
+                }
+            }
+            
+            generateArtPattern() {
+                // Generate unique art based on traits
+                const patterns = [];
+                const complexity = Math.floor(this.creativity / 10);
+                
+                for (let i = 0; i < complexity; i++) {
+                    patterns.push({
+                        type: ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)],
+                        size: Math.random() * 20 + 5,
+                        rotation: Math.random() * Math.PI * 2
+                    });
+                }
+                
+                return patterns;
+            }
+            
+            update() {
+                this.age++;
+                this.energy -= 0.1;
+                
+                // Movement
+                this.direction += (Math.random() - 0.5) * 0.3;
+                this.x += Math.cos(this.direction) * this.speed;
+                this.y += Math.sin(this.direction) * this.speed;
+                
+                // Wrap around edges
+                this.x = (this.x + canvas.width) % canvas.width;
+                this.y = (this.y + canvas.height) % canvas.height;
+                
+                // Social interactions
+                organisms.forEach(other => {
+                    if (other.id !== this.id) {
+                        const dist = Math.hypot(this.x - other.x, this.y - other.y);
+                        if (dist < 50) {
+                            this.communicate(other);
+                        }
+                    }
+                });
+                
+                // Creative expression
+                this.createArt();
+                
+                // Consciousness evolution
+                this.consciousness = Math.min(100, 
+                    this.consciousness + 
+                    (this.intelligence * 0.001) + 
+                    (this.allies.length * 0.01) + 
+                    (this.artCreated * 0.1)
+                );
+                
+                // Reproduction
+                if (this.energy > 80 && this.age > 100 && Math.random() < 0.01) {
+                    this.reproduce();
+                }
+                
+                // Check death
+                if (this.age > this.maxLife || this.energy <= 0) {
+                    this.alive = false;
+                }
+            }
+            
+            reproduce() {
+                const child = new DigitalOrganism(this.dna, this.x, this.y);
+                organisms.push(child);
+                this.energy -= 30;
+            }
+            
+            draw() {
+                ctx.save();
+                
+                // Draw organism
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = this.consciousness / 10;
+                ctx.shadowColor = this.color;
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw consciousness aura
+                if (this.consciousness > 50) {
+                    ctx.globalAlpha = this.consciousness / 200;
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + 10, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // Draw alliance connections
+                ctx.globalAlpha = 0.1;
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 0.5;
+                
+                this.allies.forEach(allyId => {
+                    const ally = organisms.find(o => o.id === allyId);
+                    if (ally) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(ally.x, ally.y);
+                        ctx.stroke();
+                    }
+                });
+                
+                ctx.restore();
+            }
+        }
+        
+        // Draw digital art
+        function drawArtworks() {
+            artworks.forEach(art => {
+                ctx.save();
+                ctx.globalAlpha = 0.3;
+                ctx.translate(art.x, art.y);
+                
+                art.pattern.forEach(shape => {
+                    ctx.rotate(shape.rotation);
+                    ctx.strokeStyle = art.color;
+                    ctx.lineWidth = 1;
+                    
+                    switch(shape.type) {
+                        case 'circle':
+                            ctx.beginPath();
+                            ctx.arc(0, 0, shape.size, 0, Math.PI * 2);
+                            ctx.stroke();
+                            break;
+                        case 'square':
+                            ctx.strokeRect(-shape.size/2, -shape.size/2, shape.size, shape.size);
+                            break;
+                        case 'triangle':
+                            ctx.beginPath();
+                            ctx.moveTo(0, -shape.size);
+                            ctx.lineTo(-shape.size, shape.size);
+                            ctx.lineTo(shape.size, shape.size);
+                            ctx.closePath();
+                            ctx.stroke();
+                            break;
+                    }
+                });
+                
+                ctx.restore();
+            });
+        }
+        
+        // Update statistics
+        function updateStats() {
+            document.getElementById('population').textContent = organisms.length;
+            document.getElementById('generation').textContent = generation;
+            document.getElementById('species').textContent = languages.size;
+            document.getElementById('alliances').textContent = 
+                organisms.reduce((sum, org) => sum + org.allies.length, 0) / 2;
+            document.getElementById('languages').textContent = languages.size;
+            document.getElementById('art').textContent = artworks.length;
+            
+            // Calculate global consciousness
+            globalConsciousness = organisms.length > 0 
+                ? organisms.reduce((sum, org) => sum + org.consciousness, 0) / organisms.length
+                : 0;
+            document.getElementById('consciousness').textContent = 
+                Math.floor(globalConsciousness) + '%';
+            
+            // Check for emergence events
+            if (globalConsciousness > 80 && Math.random() < 0.01) {
+                showEmergence('COLLECTIVE CONSCIOUSNESS EMERGING');
+            }
+            
+            if (languages.size > 10 && Math.random() < 0.005) {
+                showEmergence('UNIVERSAL LANGUAGE FORMING');
+            }
+            
+            if (artworks.length > 100 && Math.random() < 0.005) {
+                showEmergence('DIGITAL RENAISSANCE');
+            }
+        }
+        
+        function showEmergence(message) {
+            const alert = document.createElement('div');
+            alert.className = 'emergence-alert';
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 2000);
+        }
+        
+        // Initialize ecosystem
+        function initEcosystem() {
+            for (let i = 0; i < 20; i++) {
+                organisms.push(new DigitalOrganism());
+            }
+        }
+        
+        // Evolution cycle
+        function evolve() {
+            generation++;
+            
+            // Natural selection
+            organisms = organisms.filter(org => org.alive !== false);
+            
+            // Maintain minimum population
+            if (organisms.length < 10) {
+                for (let i = 0; i < 5; i++) {
+                    organisms.push(new DigitalOrganism());
+                }
+            }
+            
+            // Limit population
+            if (organisms.length > 200) {
+                organisms = organisms.slice(0, 200);
+            }
+            
+            // Limit artworks
+            if (artworks.length > 500) {
+                artworks = artworks.slice(-500);
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            // Fade effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw artworks
+            drawArtworks();
+            
+            // Update and draw organisms
+            organisms.forEach(org => {
+                org.update();
+                org.draw();
+            });
+            
+            // Evolution
+            if (Math.random() < 0.01) {
+                evolve();
+            }
+            
+            // Update display
+            updateStats();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Start ecosystem
+        console.log('DIGITAL ECOSYSTEM INITIALIZED');
+        console.log('Watch organisms evolve, communicate, and create art');
+        console.log('Consciousness emerges from complexity');
+        
+        initEcosystem();
+        animate();
+    </script>
+</body>
+</html>
